@@ -16,8 +16,8 @@ type Props = {
 };
 
 function Item({ item, handleAddToCart }: Props) {
-  const handleClick = (event: React.MouseEvent) => {
-    event.preventDefault();
+  const handleClick = () => {
+    handleAddToCart(item);
   };
 
   return (

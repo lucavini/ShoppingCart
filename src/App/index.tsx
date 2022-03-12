@@ -1,14 +1,16 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-return-await */
 import React from 'react';
 import { useQuery } from 'react-query';
 
 // Components
-import { LinearProgress, Grid } from '@mui/material';
+import { LinearProgress, Grid, Drawer, Badge } from '@mui/material';
 import { AddShoppingCart } from '@mui/icons-material';
 import Item from '../Components/Item';
+import Cart from '../Components/Cart';
 
 // Styles
-import { Wrapper } from './styles';
+import { Wrapper, StyledButton } from './styles';
 
 // Types
 export type CartItemType = {
@@ -26,14 +28,19 @@ async function getProducts(): Promise<CartItemType[]> {
 }
 
 const App = () => {
+  const [cartOpen, setCartOpen] = React.useState(false);
+  const [cartItems, setCartItems] = React.useState<CartItemType[]>([]);
+
   const { data, isLoading, error } = useQuery<CartItemType[]>(
     'products',
-    getProducts,
+    getProducts
   );
 
-  const getTotalItems = () => null;
+  const getTotalItems = (itemsArray: CartItemType[]) =>
+    itemsArray.reduce((ack: number, item) => ack + item.amount, 0);
 
-  const handleAddToCart = (clickedItem: CartItemType) => null;
+  const handleAddToCart = (clickedItem: CartItemType) =>
+    setCartItems((prevState) => [...prevState, clickedItem]);
 
   const handleRemoveFromCart = () => null;
 
@@ -42,6 +49,20 @@ const App = () => {
 
   return (
     <Wrapper>
+      <Drawer anchor='right' open={cartOpen} onClose={() => setCartOpen(false)}>
+        <Cart
+          cartItems={cartItems}
+          addToCart={handleAddToCart}
+          removeFromCart={handleRemoveFromCart}
+        />
+      </Drawer>
+
+      <StyledButton onClick={() => setCartOpen(true)}>
+        <Badge badgeContent={getTotalItems(cartItems)} color='error'>
+          <AddShoppingCart />
+        </Badge>
+      </StyledButton>
+
       <Grid container spacing={3}>
         {data?.map((item) => (
           <Grid item key={item.id} xs={12} sm={4}>

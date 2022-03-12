@@ -23,6 +23,7 @@
     "import/prefer-default-export": "off",
     "react/function-component-definition": "off",
     "comma-dangle": "off",
-    "react/jsx-no-bind": "off"
+    "react/jsx-no-bind": "off",
+    "object-curly-newline": "off"
   }
 }
